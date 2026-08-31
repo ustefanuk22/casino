@@ -1,10 +1,10 @@
 {
-  "admin_password": "123qw456",
+  "admin_password": "admin123",
   "telegram": {
-    "bot_token": "8898930216:AAHdVlRJJUg3oTp5IlxJ1zKu1jqoNDBMI3o",
-    "admin_chat_id": "8320891773"
+    "bot_token": "ВСТАВЬ_ТОКЕН_ОТ_BotFather",
+    "admin_chat_id": "ВСТАВЬ_СВОЙ_CHAT_ID"
   },
-  "support_username": "GoodBoyPrime",
+  "support_username": "username",
   "server": {
     "host": "0.0.0.0",
     "port": 8080

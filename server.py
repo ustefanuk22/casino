@@ -98,7 +98,7 @@ except (TypeError, ValueError):
 WIN_CHANCE_PERCENT = max(1.0, min(100.0, WIN_CHANCE_PERCENT))
 
 SERVER_HOST = (CFG.get("server") or {}).get("host") or "0.0.0.0"
-SERVER_PORT = int((CFG.get("server") or {}).get("port") or 8080)
+SERVER_PORT = int(os.environ.get("PORT") or (CFG.get("server") or {}).get("port") or 8080)
 
 app = Flask(__name__, static_folder=BASE, static_url_path="")
 
@@ -478,17 +478,6 @@ def tg_poll_loop():
         except Exception as e:
             print("TG poll error:", e)
             time.sleep(5)
-
-
-# ---------- static ----------
-@app.route("/")
-def index():
-    return send_from_directory(BASE, "index.html")
-
-
-@app.route("/<path:path>")
-def static_files(path):
-    return send_from_directory(BASE, path)
 
 
 # ---------- rates ----------
@@ -983,9 +972,45 @@ def admin_credit():
     )
 
 
+# ---------- static (после API, чтобы /api/* не перехватывались) ----------
+@app.route("/")
+def index():
+    index_path = os.path.join(BASE, "index.html")
+    if not os.path.isfile(index_path):
+        return (
+            f"index.html не найден в {BASE}. "
+            "На Render укажи Root Directory = папка с server.py и index.html",
+            404,
+        )
+    return send_from_directory(BASE, "index.html")
+
+
+@app.route("/<path:path>")
+def static_files(path):
+    # не отдавать «файлами» API
+    if path.startswith("api/") or path == "api":
+        return jsonify({"error": "Not found"}), 404
+    full = os.path.join(BASE, path)
+    if os.path.isfile(full):
+        return send_from_directory(BASE, path)
+    # SPA fallback
+    if os.path.isfile(os.path.join(BASE, "index.html")):
+        return send_from_directory(BASE, "index.html")
+    return "Not Found", 404
+
+
+
+# при gunicorn __main__ не выполняется — инициализируем БД здесь
+try:
+    init_db()
+except Exception as _e:
+    print("init_db warning:", _e)
+
 if __name__ == "__main__":
     init_db()
+    print("BASE:", BASE)
     print("Конфиг:", CONFIG_PATH)
+    print("index.html:", os.path.isfile(os.path.join(BASE, "index.html")))
     print("DB:", DB_PATH)
     print("Админ-пароль:", ADMIN_PASS)
     print("Мин. вывод по валютам:", MIN_WITHDRAW)
