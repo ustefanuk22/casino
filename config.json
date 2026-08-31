@@ -1,0 +1,35 @@
+{
+  "admin_password": "123qw456",
+  "telegram": {
+    "bot_token": "8898930216:AAHdVlRJJUg3oTp5IlxJ1zKu1jqoNDBMI3o",
+    "admin_chat_id": "8320891773"
+  },
+  "support_username": "GoodBoyPrime",
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8080
+  },
+  "database": {
+    "path": "casino.db"
+  },
+  "min_withdraw": {
+    "TON": 1,
+    "USDT": 5,
+    "RUB": 500,
+    "UAH": 200
+  },
+  "deposit_details": {
+    "RUB": "2200 7001 2345 6789",
+    "UAH": "4149 4991 2345 6789",
+    "USDT": "TXyz123DemoUsdtAddressTrc20Example987",
+    "TON": "UQBxDemoTonWalletAddressExample123456789"
+  },
+  "deposit_hints": {
+    "RUB": "Переведите на карту. В комментарии укажите свой email.",
+    "UAH": "Перекажіть на картку. У коментарі вкажіть свій email.",
+    "USDT": "Отправьте USDT TRC-20. В memo — ваш email.",
+    "TON": "Отправьте TON. В комментарии — email аккаунта."
+  },
+  "win_chance_percent": 48,
+  "default_language": "ru"
+}

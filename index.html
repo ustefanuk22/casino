@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoVegas — Крипто Казино</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+
+  <header class="header">
+    <div class="h-left">
+      <a href="#" class="logo" data-page="home"><span class="logo-i"></span>CryptoVegas</a>
+      <nav class="nav">
+        <a href="#" class="nav-a active" data-page="home" data-i18n="nav_home">Главная</a>
+        <a href="#" class="nav-a" data-page="games" data-i18n="nav_games">Игры</a>
+        <a href="#" class="nav-a" data-page="deposit" data-i18n="nav_deposit">Депозит</a>
+        <a href="#" class="nav-a" data-page="withdraw" data-i18n="nav_withdraw">Вывод</a>
+        <a href="#" class="nav-a" data-page="promo" data-i18n="nav_promo">Промокоды</a>
+        <a href="#" class="nav-a" data-page="support" data-i18n="nav_support">Поддержка</a>
+        <a href="#" class="nav-a" data-page="admin" id="navAdmin" data-i18n="nav_admin">Админ</a>
+      </nav>
+    </div>
+    <div class="h-right">
+      <select id="langSelect" class="lang-select" title="Language">
+        <option value="ru">RU</option>
+        <option value="uk">UK</option>
+        <option value="en">EN</option>
+      </select>
+      <div class="bal-box" id="balBox" style="display:none">
+        <span class="bal-label" id="balLabel">Баланс</span>
+        <span class="bal-val" id="balVal">0</span>
+      </div>
+      <button class="btn btn-or" id="btnDep" style="display:none" data-i18n="deposit_btn">Пополнить</button>
+      <button class="btn btn-ghost" id="btnWd" style="display:none" data-i18n="withdraw_btn">Вывод</button>
+      <div id="authGuest" style="display:flex;gap:8px">
+        <button class="btn btn-ghost" id="btnLogin" data-i18n="login">Вход</button>
+        <button class="btn btn-or" id="btnReg" data-i18n="register">Регистрация</button>
+      </div>
+      <div id="authUser" style="display:none;align-items:center;gap:10px">
+        <span class="user-name" id="userName"></span>
+        <button class="btn btn-ghost" id="btnLogout" data-i18n="logout">Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page active" id="page-home">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1><span data-i18n="hero_title_line1">Крипто-казино</span><br><span data-i18n="hero_title_line2">RUB · UAH · USDT · TON</span></h1>
+        <p><span data-i18n="hero_sub">Выбери валюту при регистрации. Пополняй, играй и выводи в одной валюте.</span></p>
+        <div class="hero-btns">
+          <button class="btn btn-or btn-lg" id="heroReg">Создать аккаунт</button>
+          <button class="btn btn-ghost btn-lg" data-page="games">Смотреть игры</button>
+        </div>
+        <div class="coins-row">
+          <span><i class="c-rub">₽</i> Рубли</span>
+          <span><i class="c-uah">₴</i> Гривны</span>
+          <span><i class="c-usdt">₮</i> USDT</span>
+          <span><i class="c-ton">◆</i> TON</span>
+        </div>
+      </div>
+    </section>
+    <section class="features">
+      <div class="feat"><div class="feat-n">01</div><h3 data-i18n="feat1_t">Валюта навсегда</h3><p data-i18n="feat1_p">Выбираешь при регистрации — потом сменить нельзя.</p></div>
+      <div class="feat"><div class="feat-n">02</div><h3 data-i18n="feat2_t">Депозит</h3><p data-i18n="feat2_p">Реквизиты под твою валюту. Баланс зачисляет админ.</p></div>
+      <div class="feat"><div class="feat-n">03</div><h3>Игры</h3><p>Слоты, мины и другие. Ставка любой суммой.</p></div>
+    </section>
+  </main>
+
+  <main class="page" id="page-games">
+    <div class="page-head">
+      <h2 data-i18n="games">Игры</h2>
+      <p class="muted" id="gamesHint" data-i18n="games_hint_guest">Войдите в аккаунт, чтобы играть</p>
+    </div>
+    <div class="games-lock" id="gamesLock">
+      <div class="lock-card">
+        <div class="lock-icon">🔒</div>
+        <h3 data-i18n="games_need_account">Нужен аккаунт</h3>
+        <p><span data-i18n="games_need_p">Зарегистрируйтесь или войдите.</span></p>
+        <div class="lock-btns">
+          <button class="btn btn-or" id="lockReg" data-i18n="register">Регистрация</button>
+          <button class="btn btn-ghost" id="lockLogin" data-i18n="login">Вход</button>
+        </div>
+      </div>
+    </div>
+    <div class="games-grid" id="gamesGrid" style="display:none">
+      <article class="g-card">
+        <div class="g-top"><h3>Слоты</h3><span class="badge">RTP 96%</span></div>
+        <div class="slots-box">
+          <div class="reel" id="r1">🍒</div>
+          <div class="reel" id="r2">🍋</div>
+          <div class="reel" id="r3">🔔</div>
+        </div>
+        <div class="g-ctrl">
+          <input type="number" id="betS" class="bet-input" min="1" step="1" value="100" placeholder="Ставка">
+          <button class="btn btn-or flex" id="spin">Крутить</button>
+        </div>
+        <div class="g-res" id="resS"></div>
+      </article>
+<article class="g-card g-card-mines">
+        <div class="g-top"><h3>Мины</h3><span class="badge">5×5</span></div>
+        <div class="mines-controls">
+          <div class="mines-row">
+            <label>Мины</label>
+            <select id="minesCount">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="24">24</option>
+            </select>
+          </div>
+          <div class="mines-row">
+            <label>Ставка</label>
+            <input type="number" id="betM" class="bet-input" min="1" step="1" value="100" placeholder="Ставка">
+          </div>
+        </div>
+        <div class="mines-info">
+          <span>Множитель: <b id="minesMult">1.00×</b></span>
+          <span>Выигрыш: <b id="minesWin">0</b></span>
+        </div>
+        <div class="mines-grid" id="minesGrid"></div>
+        <div class="g-ctrl mines-btns">
+          <button class="btn btn-or flex" id="minesStart">Играть</button>
+          <button class="btn btn-ghost flex" id="minesCash" disabled>Забрать</button>
+        </div>
+        <div class="g-res" id="resM"></div>
+      </article>
+
+      <article class="g-card">
+        <div class="g-top"><h3>Койнфлип</h3><span class="badge">x2</span></div>
+        <div class="cf-box">
+          <div class="cf-coin" id="cfCoin">🪙</div>
+        </div>
+        <div class="modes" style="margin-bottom:10px">
+          <button class="mode on" data-cf="heads" id="cfHeads">Орёл</button>
+          <button class="mode" data-cf="tails" id="cfTails">Решка</button>
+        </div>
+        <div class="g-ctrl">
+          <input type="number" id="betCF" class="bet-input" min="1" step="1" value="100" placeholder="Ставка">
+          <button class="btn btn-or flex" id="cfPlay">Бросить</button>
+        </div>
+        <div class="g-res" id="resCF"></div>
+      </article>
+
+      <article class="g-card g-card-crash">
+        <div class="g-top"><h3>Crash</h3><span class="badge">Lucky Jet</span></div>
+        <div class="crash-history" id="crashHistory"></div>
+        <div class="crash-box" id="crashBox">
+          <div class="crash-sky">
+            <div class="crash-clouds"></div>
+            <canvas id="crashCanvas" width="480" height="240"></canvas>
+            <div class="crash-plane" id="crashPlane">🚀</div>
+            <div class="crash-mult" id="crashMult">1.00×</div>
+            <div class="crash-status" id="crashStatus">Ожидание</div>
+          </div>
+        </div>
+        <div class="crash-panel">
+          <div class="crash-auto-row">
+            <label class="crash-check"><input type="checkbox" id="crashAutoBet"> Автоставка</label>
+            <label class="crash-check"><input type="checkbox" id="crashAutoOut"> Авто вывод</label>
+            <div class="crash-x-wrap">
+              <span>x</span>
+              <input type="number" id="crashAutoMult" class="crash-x-input" min="1.01" step="0.01" value="1.50">
+            </div>
+          </div>
+          <div class="crash-bet-row">
+            <button type="button" class="crash-step" id="crashMinus">−</button>
+            <input type="number" id="betCr" class="bet-input crash-bet" min="1" step="1" value="100" placeholder="Ставка">
+            <button type="button" class="crash-step" id="crashPlus">+</button>
+          </div>
+          <div class="crash-quick">
+            <button type="button" class="crash-q" data-set="5">5</button>
+            <button type="button" class="crash-q" data-set="25">25</button>
+            <button type="button" class="crash-q" data-set="50">50</button>
+            <button type="button" class="crash-q" data-set="100">100</button>
+          </div>
+          <div class="g-ctrl crash-actions">
+            <button class="btn btn-crash flex" id="crashStart">СТАВКА</button>
+            <button class="btn btn-crash-out flex" id="crashCash" disabled>ЗАБРАТЬ</button>
+          </div>
+        </div>
+        <div class="g-res" id="resCr"></div>
+      </article>
+
+      <article class="g-card g-card-towers">
+        <div class="g-top"><h3>Башни</h3><span class="badge">8 уровней</span></div>
+        <div class="towers-controls">
+          <div class="mines-row">
+            <label>Сложность</label>
+            <select id="towerDiff">
+              <option value="easy">Лёгкая (2 из 3)</option>
+              <option value="medium" selected>Средняя (1 из 3)</option>
+              <option value="hard">Сложная (1 из 4)</option>
+            </select>
+          </div>
+          <div class="mines-row">
+            <label>Ставка</label>
+            <input type="number" id="betTw" class="bet-input" min="1" step="1" value="100" placeholder="Ставка">
+          </div>
+        </div>
+        <div class="mines-info">
+          <span>Уровень: <b id="towerLvl">0</b>/8</span>
+          <span>Множитель: <b id="towerMult">1.00×</b></span>
+        </div>
+        <div class="tower-grid" id="towerGrid"></div>
+        <div class="g-ctrl mines-btns">
+          <button class="btn btn-or flex" id="towerStart">Играть</button>
+          <button class="btn btn-ghost flex" id="towerCash" disabled>Забрать</button>
+        </div>
+        <div class="g-res" id="resTw"></div>
+      </article>
+
+    </div>
+  </main>
+
+  <main class="page" id="page-deposit">
+    <div class="page-head">
+      <h2 data-i18n="deposit">Пополнение</h2>
+      <p class="muted" data-i18n="deposit_p">Реквизиты под валюту вашего аккаунта. Баланс зачисляет администратор.</p>
+    </div>
+    <div class="dep-lock" id="depLock">
+      <div class="lock-card">
+        <div class="lock-icon">🔒</div>
+        <h3 data-i18n="deposit_lock_t">Войдите в аккаунт</h3>
+        <p data-i18n="deposit_lock_p">Депозит только для зарегистрированных.</p>
+        <div class="lock-btns">
+          <button class="btn btn-or" id="depReg" data-i18n="register">Регистрация</button>
+          <button class="btn btn-ghost" id="depLogin" data-i18n="login">Вход</button>
+        </div>
+      </div>
+    </div>
+    <div class="dep-wrap" id="depWrap" style="display:none">
+      <div class="dep-panel full-w">
+        <div class="qr"></div>
+        <div class="addr-block">
+          <div class="cur-badge" id="depCurBadge">RUB</div>
+          <label id="depLabel">Реквизиты</label>
+          <div class="addr-line">
+            <code id="addrVal">—</code>
+            <button class="btn btn-ghost btn-sm" id="btnCopy" data-i18n="copy">Копировать</button>
+          </div>
+          <p class="hint" id="depHint">—</p>
+          <div class="dep-note"><b data-i18n="your_email">Ваш email:</b> <span id="depEmail">—</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <main class="page" id="page-withdraw">
+    <div class="page-head">
+      <h2 data-i18n="withdraw">Вывод средств</h2>
+      <p class="muted" data-i18n="withdraw_p">Минимальная сумма зависит от валюты аккаунта</p>
+    </div>
+    <div class="dep-lock" id="wdLock">
+      <div class="lock-card">
+        <div class="lock-icon">🔒</div>
+        <h3 data-i18n="withdraw_lock_t">Войдите в аккаунт</h3>
+        <p data-i18n="withdraw_lock_p">Вывод доступен после входа.</p>
+        <div class="lock-btns">
+          <button class="btn btn-or" id="wdReg" data-i18n="register">Регистрация</button>
+          <button class="btn btn-ghost" id="wdLogin" data-i18n="login">Вход</button>
+        </div>
+      </div>
+    </div>
+    <div id="wdWrap" style="display:none">
+      <div class="wd-rates" id="wdRates"></div>
+      <div class="dep-panel full-w" style="flex-direction:column;gap:14px">
+        <div>
+          <label class="wd-label"><span data-i18n="account_currency">Валюта аккаунта:</span> <b id="wdCur">—</b></label>
+          <label class="wd-label"><span data-i18n="min_label">Минимум:</span> <b id="wdMin">—</b></label>
+        </div>
+        <div class="wd-fields">
+          <div>
+            <label class="wd-label" data-i18n="amount">Сумма</label>
+            <input type="number" id="wdAmount" class="bet-input" style="width:100%" min="1" step="1" placeholder="Сумма">
+            <p class="hint" id="wdTonHint">≈ 0 TON</p>
+          </div>
+          <div>
+            <label class="wd-label" data-i18n="details">Реквизиты (карта / кошелёк)</label>
+            <textarea id="wdDetails" class="wd-textarea" rows="3" placeholder="Номер карты, USDT TRC-20, TON-адрес…" data-i18n-placeholder="details_ph"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-or" id="wdSubmit" data-i18n="send_request">Отправить заявку</button>
+        <p class="hint"><span data-i18n="withdraw_hint">После отправки сумма замораживается. Админ подтвердит или отклонит заявку в Telegram — при отклонении деньги вернутся на баланс.</span></p>
+      </div>
+      <div class="page-head" style="margin-top:28px">
+        <h2 style="font-size:1.1rem" data-i18n="my_requests">Мои заявки</h2>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Сумма</th>
+              <th></th>
+              <th>Статус</th>
+              <th>Дата</th>
+            </tr>
+          </thead>
+          <tbody id="wdList"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+
+
+  <main class="page" id="page-promo">
+    <div class="page-head">
+      <h2 data-i18n="promo">Промокоды</h2>
+      <p class="muted" data-i18n="promo_text">Введите промокод, чтобы получить бонус на баланс.</p>
+    </div>
+    <div class="dep-lock" id="promoLock">
+      <div class="lock-card">
+        <div class="lock-icon">🔒</div>
+        <h3 data-i18n="games_need_account">Нужен аккаунт</h3>
+        <div class="lock-btns">
+          <button class="btn btn-or" id="promoReg" data-i18n="register">Регистрация</button>
+          <button class="btn btn-ghost" id="promoLogin" data-i18n="login">Вход</button>
+        </div>
+      </div>
+    </div>
+    <div id="promoWrap" style="display:none">
+      <div class="dep-panel full-w" style="flex-direction:column;gap:12px">
+        <div class="quick-row" style="width:100%">
+          <input type="text" id="promoCode" placeholder="Промокод" data-i18n-placeholder="promo_ph" style="flex:1;min-width:140px;background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:10px 12px;border-radius:8px;font-size:.9rem;font-family:inherit;text-transform:uppercase">
+          <button class="btn btn-or" id="promoApply" data-i18n="promo_apply">Активировать</button>
+        </div>
+        <p class="hint" id="promoHint"></p>
+      </div>
+      <div class="page-head" style="margin-top:24px">
+        <h2 style="font-size:1.1rem" data-i18n="promo_history">Активированные</h2>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>Код</th><th>Бонус</th><th>Дата</th></tr></thead>
+          <tbody id="promoList"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <main class="page" id="page-support">
+    <div class="page-head">
+      <h2 data-i18n="support">Поддержка</h2>
+      <p class="muted" data-i18n="support_sub">Напишите нам в Telegram — ответим как можно быстрее</p>
+    </div>
+    <div class="lock-card" style="max-width:420px">
+      <div class="lock-icon">💬</div>
+      <h3 data-i18n="support_title">Связь с поддержкой</h3>
+      <p><span data-i18n="support_text">Откроется чат в Telegram с оператором.</span></p>
+      <a class="btn btn-or btn-lg" id="supportLink" data-i18n="support_btn" href="https://t.me/username" target="_blank" rel="noopener">Написать в Telegram</a>
+      <p class="hint" style="margin-top:14px">Юзер: <b id="supportUser">@username</b></p>
+      
+    </div>
+  </main>
+
+  <main class="page" id="page-admin">
+    <div class="page-head">
+      <h2 data-i18n="admin">Админ-панель</h2>
+      <p class="muted" data-i18n="admin_sub">Выдача баланса и управление</p>
+    </div>
+    <div id="adminGate">
+      <div class="lock-card">
+        <div class="lock-icon">🔑</div>
+        <h3 data-i18n="admin_login_t">Вход для администратора</h3>
+        <input type="password" id="adminPass" class="admin-input" placeholder="Пароль" data-i18n-placeholder="admin_pass_ph">
+        <button class="btn btn-or" id="adminEnter" style="margin-top:12px" data-i18n="admin_enter">Войти</button>
+        <p class="auth-err" id="adminErr"></p>
+      </div>
+    </div>
+    <div id="adminPanel" style="display:none">
+      <div class="admin-bar">
+        <span><span data-i18n="admin_users">Пользователей:</span> <b id="userCount">0</b></span>
+        <button class="btn btn-ghost btn-sm" id="adminRefresh" data-i18n="admin_refresh">Обновить</button>
+        <button class="btn btn-ghost btn-sm" id="adminExit" data-i18n="admin_exit">Выйти из админки</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th data-i18n="th_name">Имя</th>
+              <th data-i18n="th_email">Email</th>
+              <th data-i18n="th_currency">Валюта</th>
+              <th data-i18n="th_balance">Баланс</th>
+              <th data-i18n="th_credit">Выдать</th>
+            </tr>
+          </thead>
+          <tbody id="adminBody"></tbody>
+        </table>
+      </div>
+      <div class="admin-quick">
+        <h3 data-i18n="quick_credit">Быстрая выдача</h3>
+        <div class="quick-row">
+          <input type="email" id="quickEmail" placeholder="email">
+          <input type="number" id="quickAmt" placeholder="сумма" step="1" min="1">
+          <button class="btn btn-or" id="quickAdd" data-i18n="credit_btn">Начислить</button>
+        </div>
+        <p class="hint" style="margin-top:8px">Валюта подставится из аккаунта игрока</p>
+      </div>
+
+      
+      <div class="admin-quick" style="margin-top:20px">
+        <h3 data-i18n="admin_promo">Промокоды</h3>
+        <div class="quick-row">
+          <input type="text" id="promoAdminCode" placeholder="CODE" style="text-transform:uppercase;min-width:100px">
+          <input type="number" id="promoAdminAmount" placeholder="сумма" step="1" min="1" style="width:100px">
+          <select id="promoAdminCur">
+            <option value="USER">Валюта игрока</option>
+            <option value="RUB">RUB</option>
+            <option value="UAH">UAH</option>
+            <option value="USDT">USDT</option>
+            <option value="TON">TON</option>
+          </select>
+          <input type="number" id="promoAdminUses" placeholder="лимит" value="100" min="1" style="width:80px" title="Макс. активаций">
+          <button class="btn btn-or" id="promoAdminCreate" data-i18n="create_promo">Создать</button>
+        </div>
+        <div class="admin-table-wrap" style="margin-top:12px">
+          <table class="admin-table">
+            <thead><tr><th>Код</th><th>Сумма</th><th data-i18n="th_currency">Валюта</th><th>Исп.</th><th>Статус</th><th></th></tr></thead>
+            <tbody id="promoAdminList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-quick" style="margin-top:20px">
+        <h3 data-i18n="admin_wd">Заявки на вывод</h3>
+        <div class="admin-bar" style="margin-bottom:10px">
+          <button class="btn btn-ghost btn-sm" id="wdAdminRefresh" data-i18n="admin_refresh">Обновить</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Игрок</th>
+                <th>Сумма</th>
+                <th>Реквизиты</th>
+                <th>Статус</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="wdAdminList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><p data-i18n="footer">Демонстрационный сайт. 18+</p></footer>
+</div>
+
+<div class="overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-x" id="authClose">×</button>
+    <div class="tabs">
+      <button class="tab on" data-tab="login" data-i18n="auth_login">Вход</button>
+      <button class="tab" data-tab="reg" data-i18n="auth_reg">Регистрация</button>
+    </div>
+    <form id="formLogin" class="auth-form">
+      <label data-i18n="label_email">Email</label>
+      <input type="email" id="loginEmail" placeholder="you@email.com" required>
+      <label data-i18n="label_pass">Пароль</label>
+      <input type="password" id="loginPass" placeholder="••••••••" required>
+      <button type="submit" class="btn btn-or full" data-i18n="btn_login">Войти</button>
+    </form>
+    <form id="formReg" class="auth-form" style="display:none">
+      <label data-i18n="label_name">Имя</label>
+      <input type="text" id="regName" placeholder="Как к вам обращаться" data-i18n-placeholder="name_ph" required>
+      <label data-i18n="label_email">Email</label>
+      <input type="email" id="regEmail" placeholder="you@email.com" required>
+      <label><span data-i18n="label_currency">Валюта аккаунта</span> <small style="color:var(--mu)" data-i18n="label_currency_note">(потом не изменить)</small></label>
+      <div class="reg-curs" id="regCurs">
+        <button type="button" class="reg-cur on" data-cur="RUB">₽ RUB</button>
+        <button type="button" class="reg-cur" data-cur="UAH">₴ UAH</button>
+        <button type="button" class="reg-cur" data-cur="USDT">₮ USDT</button>
+        <button type="button" class="reg-cur" data-cur="TON">◆ TON</button>
+      </div>
+      <label data-i18n="label_pass">Пароль</label>
+      <input type="password" id="regPass" placeholder="Минимум 6 символов" data-i18n-placeholder="pass_ph" required minlength="6">
+      <label data-i18n="label_pass2">Повторите пароль</label>
+      <input type="password" id="regPass2" placeholder="••••••••" required>
+      <button type="submit" class="btn btn-or full" data-i18n="btn_create">Создать аккаунт</button>
+    </form>
+    <p class="auth-err" id="authErr"></p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="i18n.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
